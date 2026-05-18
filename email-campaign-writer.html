@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Email Campaign Writer — by Triscia Bianca Jumawid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-hint: #555;
+    --accent: #d4a84b;
+    --accent-dim: rgba(212,168,75,0.12);
+    --accent-border: rgba(212,168,75,0.3);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.1);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.1);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.1);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.1);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: var(--text-muted); }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border-hover); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
+
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .g1 { margin-bottom: 12px; }
+
+  label, .lbl {
+    display: block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus { border-color: var(--accent-border); }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .btn:hover { border-color: var(--border-hover); background: #222; }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+    width: 100%;
+    font-size: 14px;
+    padding: 11px;
+  }
+
+  .btn-primary:hover { background: #e0b55a; border-color: #e0b55a; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-row .btn { flex: 1; }
+
+  .output-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .out-label {
+    font-size: 11px;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .out-text { font-size: 14px; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+  .out-text.subject { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .out-text.preview-t { font-size: 13px; color: var(--text-muted); }
+
+  .copy-sm {
+    font-size: 11px;
+    padding: 3px 10px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .copy-sm:hover { color: var(--text); border-color: var(--border-hover); }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .tag-promo { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+  .tag-welcome { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .tag-winback { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .tag-abandon { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .tag-announce { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+
+  .preview-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 1rem;
+  }
+
+  .preview-from { font-size: 12px; color: var(--text-hint); margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+  .preview-subject { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .preview-prev { font-size: 12px; color: var(--text-muted); }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .history-item:last-child { border-bottom: none; }
+  .history-item:hover { opacity: 0.8; }
+  .history-title { font-size: 13px; color: var(--text-muted); flex: 1; }
+  .history-date { font-size: 11px; color: var(--text-hint); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-hint);
+    font-size: 14px;
+  }
+
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+  .loading::after {
+    content: '';
+    animation: dots 1.2s steps(3, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  @media (max-width: 540px) {
+    .g2 { grid-template-columns: 1fr; }
+    .btn-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand-tag">AI Marketing Tool · by Triscia Bianca Jumawid</div>
+    <h1>Email Campaign Writer</h1>
+    <p class="subtitle">Generate Klaviyo-ready emails — subject lines, preview text, body copy & CTA</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('compose')">✉ Compose</button>
+    <button class="tab" onclick="switchTab('output')">📄 Email output</button>
+    <button class="tab" onclick="switchTab('history')">🕐 History</button>
+  </div>
+
+  <div id="panel-compose" class="panel active">
+    <div class="card">
+      <div class="card-title">Email campaign details</div>
+      <div class="g2">
+        <div>
+          <label>Brand name</label>
+          <input type="text" id="brand" placeholder="e.g. Ink Permanent" />
+        </div>
+        <div>
+          <label>Email type</label>
+          <select id="emailType">
+            <option value="promotional">Promotional / sale</option>
+            <option value="welcome">Welcome series</option>
+            <option value="abandoned cart">Abandoned cart</option>
+            <option value="win-back">Win-back / re-engagement</option>
+            <option value="product launch">Product launch / announcement</option>
+            <option value="educational">Educational / value email</option>
+          </select>
+        </div>
+      </div>
+      <div class="g2">
+        <div>
+          <label>Target audience</label>
+          <select id="audience">
+            <option value="PMU artists and brow technicians">PMU artists & brow techs</option>
+            <option value="new subscribers">New subscribers</option>
+            <option value="past customers">Past customers</option>
+            <option value="cart abandoners">Cart abandoners</option>
+            <option value="beauty students">Beauty students</option>
+            <option value="lapsed customers (90+ days)">Lapsed customers</option>
+          </select>
+        </div>
+        <div>
+          <label>Tone</label>
+          <select id="tone">
+            <option value="warm and professional">Warm & professional</option>
+            <option value="bold and direct">Bold & direct</option>
+            <option value="educational and helpful">Educational & helpful</option>
+            <option value="urgent and promotional">Urgent & promotional</option>
+            <option value="friendly and conversational">Friendly & conversational</option>
+          </select>
+        </div>
+      </div>
+      <div class="g1">
+        <label>Key message / offer</label>
+        <textarea id="message" rows="3" placeholder="e.g. 20% off all pigments this weekend only, use code BROW20. Highlight our nano brow collection..."></textarea>
+      </div>
+      <div class="g2">
+        <div>
+          <label>CTA button text</label>
+          <input type="text" id="cta" placeholder="e.g. Shop now, Grab the deal" />
+        </div>
+        <div>
+          <label>Sender name</label>
+          <input type="text" id="sender" placeholder="e.g. Maya from Ink Permanent" />
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateEmail()">Write my email →</button>
+    </div>
+  </div>
+
+  <div id="panel-output" class="panel">
+    <div id="output-content">
+      <div class="empty">
+        <div class="empty-icon">✉</div>
+        Fill in the compose tab to generate your email.
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-history" class="panel">
+    <div class="card">
+      <div class="card-title">Generated emails</div>
+      <div id="history-list">
+        <div class="empty">
+          <div class="empty-icon">🕐</div>
+          No emails generated yet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let history = [];
+let currentEmail = null;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelector('.tab[onclick="switchTab(\'' + tab + '\')"]').classList.add('active');
+}
+
+async function generateEmail() {
+  const brand = document.getElementById('brand').value.trim() || 'the brand';
+  const emailType = document.getElementById('emailType').value;
+  const audience = document.getElementById('audience').value;
+  const tone = document.getElementById('tone').value;
+  const message = document.getElementById('message').value.trim();
+  const cta = document.getElementById('cta').value.trim() || 'Shop now';
+  const sender = document.getElementById('sender').value.trim() || brand;
+
+  switchTab('output');
+  document.getElementById('output-content').innerHTML = '<div class="empty"><div class="empty-icon">✦</div><span class="loading">Writing your email</span></div>';
+
+  const prompt = `Write a ${emailType} email for ${brand}, a PMU/brow supply ecommerce brand.
+Audience: ${audience}
+Tone: ${tone}
+Key message: ${message || 'Engage and convert the reader'}
+CTA: ${cta}
+Sender: ${sender}
+
+Return ONLY valid JSON, no markdown, no backticks:
+{
+  "subject1": "subject line option 1 (max 50 chars, curiosity-driven)",
+  "subject2": "subject line option 2 (max 50 chars, benefit-driven)",
+  "subject3": "subject line option 3 (max 50 chars, urgency or FOMO)",
+  "preview": "preview text (max 90 chars, complements subject)",
+  "body": "full email body (3-5 paragraphs, natural tone, no placeholders, include the CTA naturally)",
+  "cta": "${cta}"
+}
+
+Rules:
+- Subject lines must be specific, not generic
+- Body sounds human — like an email from a real person, not a template
+- No brackets or placeholder text in the body
+- End with a natural sign-off from ${sender}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    let raw = data.content.map(b => b.text || '').join('');
+    raw = raw.replace(/```json|```/g, '').trim();
+    const email = JSON.parse(raw);
+    email.type = emailType;
+    email.brand = brand;
+    email.sender = sender;
+    email.date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    currentEmail = email;
+    history.unshift(email);
+    renderOutput(email);
+    renderHistory();
+  } catch(e) {
+    document.getElementById('output-content').innerHTML = '<div class="empty">Something went wrong — please try again.</div>';
+  }
+}
+
+const tagMap = {
+  'promotional': ['tag-promo', 'Promo'],
+  'welcome': ['tag-welcome', 'Welcome'],
+  'abandoned cart': ['tag-abandon', 'Abandoned cart'],
+  'win-back': ['tag-winback', 'Win-back'],
+  'product launch': ['tag-announce', 'Launch'],
+  'educational': ['tag-announce', 'Educational']
+};
+
+function renderOutput(email) {
+  const [tClass, tLabel] = tagMap[email.type] || ['tag-announce', email.type];
+  document.getElementById('output-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+      <span style="font-size:15px;font-weight:600;color:var(--text);">Generated email</span>
+      <span class="tag ${tClass}">${tLabel}</span>
+    </div>
+    <div class="preview-bar">
+      <div class="preview-from">From: ${email.sender}</div>
+      <div class="preview-subject">${email.subject1}</div>
+      <div class="preview-prev">${email.preview}</div>
+    </div>
+    <div class="output-block">
+      <div class="out-label">Subject line options <button class="copy-sm" onclick="copyText(this, \`${escape(email.subject1 + '\n' + email.subject2 + '\n' + email.subject3)}\`)">copy all</button></div>
+      <div class="out-text subject">${email.subject1}</div>
+      <div class="out-text subject" style="opacity:0.7;">${email.subject2}</div>
+      <div class="out-text subject" style="opacity:0.5;">${email.subject3}</div>
+    </div>
+    <div class="output-block">
+      <div class="out-label">Preview text <button class="copy-sm" onclick="copyText(this, \`${escape(email.preview)}\`)">copy</button></div>
+      <div class="out-text preview-t">${email.preview}</div>
+    </div>
+    <div class="output-block">
+      <div class="out-label">Email body <button class="copy-sm" onclick="copyText(this, \`${escape(email.body)}\`)">copy</button></div>
+      <div class="out-text">${email.body}</div>
+    </div>
+    <div class="output-block">
+      <div class="out-label">CTA button</div>
+      <div style="margin-top:8px;">
+        <span style="display:inline-block;background:var(--accent);color:#000;padding:9px 22px;border-radius:6px;font-size:14px;font-weight:600;">${email.cta}</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="copyFull()">⎘ Copy full email</button>
+      <button class="btn" onclick="generateEmail()">↺ Regenerate</button>
+    </div>`;
+}
+
+function copyText(btn, encoded) {
+  navigator.clipboard.writeText(unescape(encoded));
+  const orig = btn.textContent;
+  btn.textContent = '✓ done';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+function copyFull() {
+  if (!currentEmail) return;
+  const text = `Subject: ${currentEmail.subject1}\nPreview: ${currentEmail.preview}\n\n${currentEmail.body}\n\n[CTA: ${currentEmail.cta}]`;
+  navigator.clipboard.writeText(text);
+  const btn = event.target.closest('button');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!history.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🕐</div>No emails generated yet.</div>';
+    return;
+  }
+  list.innerHTML = history.map((e, i) => {
+    const [tc, tl] = tagMap[e.type] || ['tag-announce', e.type];
+    return `<div class="history-item" onclick="viewHistory(${i})">
+      <span class="tag ${tc}">${tl}</span>
+      <span class="history-title">${e.subject1}</span>
+      <span class="history-date">${e.date}</span>
+    </div>`;
+  }).join('');
+}
+
+function viewHistory(i) {
+  currentEmail = history[i];
+  renderOutput(history[i]);
+  switchTab('output');
+}
+</script>
+</body>
+</html>
