@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PMU Creator Outreach Tracker — by Triscia Bianca Jumawid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-hint: #555;
+    --accent: #d4a84b;
+    --accent-dim: rgba(212,168,75,0.12);
+    --accent-border: rgba(212,168,75,0.3);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.1);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.1);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.1);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border-hover);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .input-full { margin-bottom: 12px; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent-border);
+  }
+
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .btn:hover { border-color: var(--border-hover); background: #222; }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+    width: 100%;
+    justify-content: center;
+    font-size: 14px;
+    padding: 11px;
+  }
+
+  .btn-primary:hover { background: #e0b55a; border-color: #e0b55a; }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+  .pitch-output {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 80px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .pitch-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-gifting { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .tag-commission { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .tag-collab { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+  .tag-pending { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+  .tag-sent { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .tag-replied { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .tag-no-response { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .stat-label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+  .creator-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .creator-row:last-child { border-bottom: none; }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .creator-info { flex: 1; min-width: 0; }
+  .creator-handle { font-size: 14px; font-weight: 500; color: var(--text); }
+  .creator-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .creator-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  .status-select {
+    width: auto;
+    font-size: 12px;
+    padding: 4px 28px 4px 8px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  .btn-icon {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px 8px;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+
+  .btn-icon:hover { border-color: var(--border-hover); color: var(--text); }
+  .btn-icon.danger:hover { color: var(--red); border-color: rgba(248,113,113,0.3); }
+
+  .empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-hint);
+    font-size: 14px;
+  }
+
+  .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  .loading::after {
+    content: '';
+    animation: dots 1.2s steps(3, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  @media (max-width: 540px) {
+    .input-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .creator-actions { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand-tag">AI Marketing Tool · by Triscia Bianca Jumawid</div>
+    <h1>PMU Creator Outreach Tracker</h1>
+    <p class="subtitle">Generate personalized DM pitches and track your creator pipeline</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('generate')">✦ Generate pitch</button>
+    <button class="tab" onclick="switchTab('tracker')">⊞ Outreach tracker</button>
+  </div>
+
+  <!-- GENERATE TAB -->
+  <div id="panel-generate" class="panel active">
+    <div class="card">
+      <div class="card-title">Creator details</div>
+      <div class="input-grid">
+        <div>
+          <label>Creator handle</label>
+          <input type="text" id="handle" placeholder="@pmuartist.jane" />
+        </div>
+        <div>
+          <label>Follower count</label>
+          <select id="followers">
+            <option value="nano">Nano (1K–5K)</option>
+            <option value="micro" selected>Micro (5K–50K)</option>
+            <option value="mid">Mid (50K–200K)</option>
+            <option value="macro">Macro (200K+)</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-grid">
+        <div>
+          <label>Creator niche</label>
+          <select id="niche">
+            <option value="PMU artist">PMU artist</option>
+            <option value="microblading specialist">Microblading specialist</option>
+            <option value="brow artist">Brow artist</option>
+            <option value="beauty educator">Beauty educator</option>
+            <option value="PMU student">PMU student</option>
+            <option value="tattoo artist">Tattoo artist</option>
+            <option value="beauty influencer">Beauty influencer</option>
+          </select>
+        </div>
+        <div>
+          <label>Pitch type</label>
+          <select id="pitchType">
+            <option value="gifting">Product gifting</option>
+            <option value="commission">Commission / affiliate</option>
+            <option value="collab">Full collab</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-full">
+        <label>Notes about their content (optional)</label>
+        <textarea id="notes" placeholder="e.g. posts a lot of before/after brow transformations, uses the ombre technique, very engaged community..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="generatePitch()">Generate DM pitch →</button>
+    </div>
+
+    <div class="card" id="pitch-card" style="display:none;">
+      <div class="pitch-header">
+        <div class="card-title" style="margin:0;">Generated DM pitch</div>
+        <span id="pitch-tag" class="tag"></span>
+      </div>
+      <div class="pitch-output" id="pitch-output"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="copyPitch()">⎘ Copy pitch</button>
+        <button class="btn" onclick="saveToTracker()">+ Save to tracker</button>
+        <button class="btn" onclick="generatePitch()">↺ Regenerate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKER TAB -->
+  <div id="panel-tracker" class="panel">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-sent" style="color:var(--blue)">0</div>
+        <div class="stat-label">Sent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-replied" style="color:var(--green)">0</div>
+        <div class="stat-label">Replied</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-noreply" style="color:var(--red)">0</div>
+        <div class="stat-label">No response</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+        <div class="card-title" style="margin:0;">Creator pipeline</div>
+        <span id="creator-count" style="font-size:12px; color:var(--text-muted); font-family:'DM Mono',monospace;">0 creators</span>
+      </div>
+      <div id="creator-list">
+        <div class="empty">
+          <div class="empty-icon">◎</div>
+          No creators yet — generate a pitch and save it here.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let creators = [];
+let currentPitch = '';
+let currentHandle = '';
+let currentNiche = '';
+let currentPitchType = '';
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelector('.tab[onclick="switchTab(\'' + tab + '\')"]').classList.add('active');
+}
+
+async function generatePitch() {
+  const handle = document.getElementById('handle').value.trim() || '@creator';
+  const followers = document.getElementById('followers').value;
+  const niche = document.getElementById('niche').value;
+  const pitchType = document.getElementById('pitchType').value;
+  const notes = document.getElementById('notes').value.trim();
+
+  currentHandle = handle;
+  currentNiche = niche;
+  currentPitchType = pitchType;
+
+  const pitchCard = document.getElementById('pitch-card');
+  const pitchOutput = document.getElementById('pitch-output');
+  const pitchTag = document.getElementById('pitch-tag');
+
+  pitchCard.style.display = 'block';
+  pitchOutput.className = 'pitch-output loading';
+  pitchOutput.textContent = 'Writing your pitch';
+
+  const tagMap = { gifting: ['tag-gifting', 'Product gifting'], commission: ['tag-commission', 'Commission / affiliate'], collab: ['tag-collab', 'Full collab'] };
+  pitchTag.className = 'tag ' + tagMap[pitchType][0];
+  pitchTag.textContent = tagMap[pitchType][1];
+
+  const followerMap = { nano: '1K–5K', micro: '5K–50K', mid: '50K–200K', macro: '200K+' };
+
+  const prompt = `You are a brand outreach specialist for Ink Permanent, a US-based PMU (permanent makeup) and brow professional supply brand. Write a short, warm, and natural Instagram or TikTok DM pitch to a ${niche} with ${followerMap[followers]} followers.
+
+Handle: ${handle}
+Pitch type: ${pitchType === 'gifting' ? 'product gifting (free products in exchange for honest content)' : pitchType === 'commission' ? 'affiliate/commission deal (earn % on sales they drive)' : 'full paid collaboration'}
+${notes ? 'Notes about their content: ' + notes : ''}
+
+Guidelines:
+- Sound like a real person, not a corporate email
+- Keep it under 120 words
+- Mention Ink Permanent naturally (PMU/brow supply brand)
+- Be specific to their niche (${niche})
+- End with a clear, low-pressure call to action
+- Do NOT use emojis excessively — max 1-2 if natural
+- Do NOT use generic phrases like "love your content" without being specific
+- Write ONLY the DM message, no intro or explanation`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    currentPitch = data.content.map(b => b.text || '').join('');
+    pitchOutput.className = 'pitch-output';
+    pitchOutput.textContent = currentPitch;
+  } catch(e) {
+    pitchOutput.className = 'pitch-output';
+    pitchOutput.textContent = 'Something went wrong — please try again.';
+  }
+}
+
+function copyPitch() {
+  if (!currentPitch) return;
+  navigator.clipboard.writeText(currentPitch);
+  const btn = event.target.closest('button');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+function saveToTracker() {
+  if (!currentPitch) return;
+  creators.unshift({
+    id: Date.now(),
+    handle: currentHandle || '@creator',
+    niche: currentNiche,
+    pitchType: currentPitchType,
+    pitch: currentPitch,
+    status: 'pending',
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  });
+  renderTracker();
+  switchTab('tracker');
+}
+
+function renderTracker() {
+  const list = document.getElementById('creator-list');
+  document.getElementById('creator-count').textContent = creators.length + ' creator' + (creators.length !== 1 ? 's' : '');
+  document.getElementById('stat-total').textContent = creators.length;
+  document.getElementById('stat-sent').textContent = creators.filter(c => c.status === 'sent').length;
+  document.getElementById('stat-replied').textContent = creators.filter(c => c.status === 'replied').length;
+  document.getElementById('stat-noreply').textContent = creators.filter(c => c.status === 'no-response').length;
+
+  if (!creators.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">◎</div>No creators yet — generate a pitch and save it here.</div>';
+    return;
+  }
+
+  const typeLabel = { gifting: 'Gifting', commission: 'Commission', collab: 'Collab' };
+  const typeClass = { gifting: 'tag-gifting', commission: 'tag-commission', collab: 'tag-collab' };
+
+  list.innerHTML = creators.map(c => {
+    const initials = c.handle.replace('@','').slice(0,2).toUpperCase();
+    return `<div class="creator-row">
+      <div class="avatar">${initials}</div>
+      <div class="creator-info">
+        <div class="creator-handle">${c.handle}</div>
+        <div class="creator-meta">${c.niche} · ${c.date} · <span class="tag ${typeClass[c.pitchType]}" style="font-size:10px;padding:2px 7px;">${typeLabel[c.pitchType]}</span></div>
+      </div>
+      <div class="creator-actions">
+        <select class="status-select btn" onchange="updateStatus(${c.id}, this.value)">
+          <option value="pending" ${c.status==='pending'?'selected':''}>Pending</option>
+          <option value="sent" ${c.status==='sent'?'selected':''}>Sent</option>
+          <option value="replied" ${c.status==='replied'?'selected':''}>Replied</option>
+          <option value="no-response" ${c.status==='no-response'?'selected':''}>No response</option>
+        </select>
+        <button class="btn-icon" onclick="viewPitch(${c.id})" title="View pitch">👁</button>
+        <button class="btn-icon danger" onclick="removeCreator(${c.id})" title="Remove">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStatus(id, status) {
+  const c = creators.find(x => x.id === id);
+  if (c) { c.status = status; renderTracker(); }
+}
+
+function removeCreator(id) {
+  creators = creators.filter(x => x.id !== id);
+  renderTracker();
+}
+
+function viewPitch(id) {
+  const c = creators.find(x => x.id === id);
+  if (!c) return;
+  currentPitch = c.pitch;
+  currentHandle = c.handle;
+  currentNiche = c.niche;
+  currentPitchType = c.pitchType;
+  document.getElementById('handle').value = c.handle;
+  document.getElementById('niche').value = c.niche;
+  document.getElementById('pitchType').value = c.pitchType;
+  const pitchTag = document.getElementById('pitch-tag');
+  const tagMap = { gifting: ['tag-gifting', 'Product gifting'], commission: ['tag-commission', 'Commission / affiliate'], collab: ['tag-collab', 'Full collab'] };
+  pitchTag.className = 'tag ' + tagMap[c.pitchType][0];
+  pitchTag.textContent = tagMap[c.pitchType][1];
+  document.getElementById('pitch-output').textContent = c.pitch;
+  document.getElementById('pitch-card').style.display = 'block';
+  switchTab('generate');
+}
+</script>
+</body>
+</html>
