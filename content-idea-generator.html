@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Idea Generator — by Triscia Bianca Jumawid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --text-hint: #555;
+    --accent: #d4a84b;
+    --accent-dim: rgba(212,168,75,0.12);
+    --accent-border: rgba(212,168,75,0.3);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.1);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.1);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.1);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.1);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: var(--text-muted); }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+
+  .tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border-hover); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .input-full { margin-bottom: 12px; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus { border-color: var(--accent-border); }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .btn:hover { border-color: var(--border-hover); background: #222; }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+    width: 100%;
+    justify-content: center;
+    font-size: 14px;
+    padding: 11px;
+  }
+
+  .btn-primary:hover { background: #e0b55a; border-color: #e0b55a; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .stat-num { font-size: 22px; font-weight: 600; margin-bottom: 2px; }
+  .stat-label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+  .week-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 1.25rem 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .idea-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+
+  .idea-card:hover { border-color: var(--border-hover); }
+
+  .idea-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+  .idea-day { font-size: 11px; color: var(--text-hint); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .tag-reel { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .tag-carousel { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+  .tag-static { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .tag-ugc { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+  .idea-hook { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+  .idea-caption { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 8px; }
+  .idea-hashtags { font-size: 12px; color: var(--blue); font-family: 'DM Mono', monospace; }
+
+  .btn-copy-small {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-copy-small:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-hint);
+    font-size: 14px;
+  }
+
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+  .loading::after {
+    content: '';
+    animation: dots 1.2s steps(3, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  @media (max-width: 540px) {
+    .input-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand-tag">AI Marketing Tool · by Triscia Bianca Jumawid</div>
+    <h1>TikTok & Instagram Content Idea Generator</h1>
+    <p class="subtitle">Generate 30 days of scroll-stopping content ideas, hooks, captions & hashtags</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('setup')">⚙ Setup</button>
+    <button class="tab" onclick="switchTab('calendar')">📅 30-day calendar</button>
+  </div>
+
+  <div id="panel-setup" class="panel active">
+    <div class="card">
+      <div class="card-title">Brand & content details</div>
+      <div class="input-grid">
+        <div>
+          <label>Brand name</label>
+          <input type="text" id="brand" placeholder="e.g. Ink Permanent" />
+        </div>
+        <div>
+          <label>Platform focus</label>
+          <select id="platform">
+            <option value="TikTok and Instagram">Both TikTok & Instagram</option>
+            <option value="TikTok">TikTok only</option>
+            <option value="Instagram">Instagram only</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-grid">
+        <div>
+          <label>Niche / industry</label>
+          <select id="niche">
+            <option value="PMU and brow supply">PMU & brow supply</option>
+            <option value="fashion and clothing">Fashion & clothing</option>
+            <option value="beauty and skincare">Beauty & skincare</option>
+            <option value="ecommerce general">Ecommerce general</option>
+            <option value="tattoo supplies">Tattoo supplies</option>
+          </select>
+        </div>
+        <div>
+          <label>Target audience</label>
+          <select id="audience">
+            <option value="PMU artists and brow technicians">PMU artists & brow techs</option>
+            <option value="beauty students and beginners">Beauty students</option>
+            <option value="beauty enthusiasts and consumers">Beauty consumers</option>
+            <option value="professional makeup artists">Pro MUA</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-full">
+        <label>Top products or themes to highlight (optional)</label>
+        <textarea id="products" placeholder="e.g. nano brow pigments, PMU needles, mapping tools, aftercare kits..."></textarea>
+      </div>
+      <div class="input-grid">
+        <div>
+          <label>Content mix</label>
+          <select id="mix">
+            <option value="educational and promotional">Educational + promotional</option>
+            <option value="mostly educational">Mostly educational</option>
+            <option value="mostly promotional">Mostly promotional</option>
+            <option value="entertainment and trending">Entertainment + trending</option>
+          </select>
+        </div>
+        <div>
+          <label>Number of ideas</label>
+          <select id="count">
+            <option value="7">7 ideas (1 week)</option>
+            <option value="14" selected>14 ideas (2 weeks)</option>
+            <option value="30">30 ideas (full month)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateIdeas()">Generate content calendar →</button>
+    </div>
+  </div>
+
+  <div id="panel-calendar" class="panel">
+    <div class="stats-grid" id="stats-grid" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-num" id="s-total">0</div>
+        <div class="stat-label">Total ideas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-reels" style="color:var(--blue)">0</div>
+        <div class="stat-label">Reels/TikToks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-carousel" style="color:var(--orange)">0</div>
+        <div class="stat-label">Carousels</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="s-static" style="color:var(--green)">0</div>
+        <div class="stat-label">Static posts</div>
+      </div>
+    </div>
+
+    <div id="calendar-output">
+      <div class="empty">
+        <div class="empty-icon">📅</div>
+        Fill in the setup tab and generate your content calendar.
+      </div>
+    </div>
+
+    <div id="cal-actions" style="display:none; margin-top:1rem;">
+      <button class="btn btn-primary" onclick="copyAll()">⎘ Copy all ideas</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let allIdeas = [];
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelector('.tab[onclick="switchTab(\'' + tab + '\')"]').classList.add('active');
+}
+
+async function generateIdeas() {
+  const brand = document.getElementById('brand').value.trim() || 'the brand';
+  const platform = document.getElementById('platform').value;
+  const niche = document.getElementById('niche').value;
+  const audience = document.getElementById('audience').value;
+  const products = document.getElementById('products').value.trim();
+  const mix = document.getElementById('mix').value;
+  const count = document.getElementById('count').value;
+
+  switchTab('calendar');
+  document.getElementById('stats-grid').style.display = 'none';
+  document.getElementById('cal-actions').style.display = 'none';
+  document.getElementById('calendar-output').innerHTML = '<div class="empty"><div class="empty-icon">✦</div><span class="loading">Generating ' + count + ' content ideas</span></div>';
+
+  const prompt = `You are a social media strategist for ${brand}, a ${niche} brand targeting ${audience} on ${platform}.
+
+Generate exactly ${count} content ideas. Mix must be ${mix}.
+${products ? 'Products/themes to highlight: ' + products : ''}
+
+Return ONLY a valid JSON array, no explanation, no markdown, no backticks. Each object:
+{
+  "day": 1,
+  "type": "Reel" or "Carousel" or "Static" or "UGC",
+  "hook": "opening hook or title (max 12 words, punchy)",
+  "caption": "ready-to-post caption (2-3 sentences, natural tone, include 1 CTA)",
+  "hashtags": "#tag1 #tag2 #tag3 #tag4 #tag5"
+}
+
+Rules:
+- Hooks must stop the scroll — be specific, bold, curiosity-driven
+- Mix content types across the ${count} days
+- Captions sound human, not corporate
+- Hashtags niche-specific and relevant
+- Make ideas genuinely useful for ${audience}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    let raw = data.content.map(b => b.text || '').join('');
+    raw = raw.replace(/```json|```/g, '').trim();
+    allIdeas = JSON.parse(raw);
+    renderCalendar(allIdeas);
+  } catch(e) {
+    document.getElementById('calendar-output').innerHTML = '<div class="empty">Something went wrong — please try again.</div>';
+  }
+}
+
+function renderCalendar(ideas) {
+  document.getElementById('s-total').textContent = ideas.length;
+  document.getElementById('s-reels').textContent = ideas.filter(i => i.type === 'Reel').length;
+  document.getElementById('s-carousel').textContent = ideas.filter(i => i.type === 'Carousel').length;
+  document.getElementById('s-static').textContent = ideas.filter(i => i.type === 'Static').length;
+  document.getElementById('stats-grid').style.display = 'grid';
+  document.getElementById('cal-actions').style.display = 'block';
+
+  const typeClass = { Reel: 'tag-reel', Carousel: 'tag-carousel', Static: 'tag-static', UGC: 'tag-ugc' };
+  const weeks = Math.ceil(ideas.length / 7);
+  let html = '';
+
+  for (let w = 0; w < weeks; w++) {
+    html += `<div class="week-label">Week ${w + 1}</div>`;
+    ideas.slice(w * 7, (w + 1) * 7).forEach(idea => {
+      html += `<div class="idea-card">
+        <div class="idea-top">
+          <div class="idea-day">Day ${idea.day}</div>
+          <button class="btn-copy-small" onclick="copyIdea(${idea.day - 1}, this)">⎘ Copy</button>
+        </div>
+        <span class="tag ${typeClass[idea.type] || 'tag-static'}">${idea.type}</span>
+        <div class="idea-hook">${idea.hook}</div>
+        <div class="idea-caption">${idea.caption}</div>
+        <div class="idea-hashtags">${idea.hashtags}</div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('calendar-output').innerHTML = html;
+}
+
+function copyIdea(index, btn) {
+  const idea = allIdeas[index];
+  if (!idea) return;
+  const text = `Day ${idea.day} — ${idea.type}\n\nHook: ${idea.hook}\n\nCaption: ${idea.caption}\n\n${idea.hashtags}`;
+  navigator.clipboard.writeText(text);
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+function copyAll() {
+  if (!allIdeas.length) return;
+  const text = allIdeas.map(i => `Day ${i.day} — ${i.type}\nHook: ${i.hook}\nCaption: ${i.caption}\n${i.hashtags}`).join('\n\n---\n\n');
+  navigator.clipboard.writeText(text);
+  const btn = event.target.closest('button');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied all!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+</script>
+</body>
+</html>
