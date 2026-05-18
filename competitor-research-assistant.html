@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Competitor Research Assistant — by Triscia Bianca Jumawid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #111111; --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.15);
+    --text: #f0f0f0; --text-muted: #888; --text-hint: #555;
+    --accent: #d4a84b; --accent-dim: rgba(212,168,75,0.12); --accent-border: rgba(212,168,75,0.3);
+    --green: #3ecf8e; --green-dim: rgba(62,207,142,0.1);
+    --blue: #5b9cf6; --blue-dim: rgba(91,156,246,0.1);
+    --red: #f87171; --red-dim: rgba(248,113,113,0.1);
+    --orange: #fb923c; --orange-dim: rgba(251,146,60,0.1);
+    --radius: 10px; --radius-sm: 6px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+  .container { max-width: 760px; margin: 0 auto; }
+  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .brand-tag { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: var(--text-muted); }
+  .tabs { display: flex; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px; margin-bottom: 1.5rem; }
+  .tab { flex: 1; padding: 8px 16px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; background: none; color: var(--text-muted); border-radius: var(--radius-sm); transition: all 0.15s; font-weight: 500; }
+  .tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border-hover); }
+  .panel { display: none; } .panel.active { display: block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .g1 { margin-bottom: 12px; }
+  label { display: block; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  input, select, textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 9px 12px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent-border); }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; background: var(--surface2); color: var(--text); }
+  .btn:hover { border-color: var(--border-hover); background: #222; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; width: 100%; font-size: 14px; padding: 11px; }
+  .btn-primary:hover { background: #e0b55a; border-color: #e0b55a; }
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text-hint); font-size: 14px; }
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+  .loading::after { content: ''; animation: dots 1.2s steps(3,end) infinite; }
+  @keyframes dots { 0%,20%{content:'.'} 40%{content:'..'} 60%,100%{content:'...'} }
+  .report-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .report-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .report-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-family: 'DM Mono', monospace; }
+  .section-block { margin-bottom: 1.5rem; }
+  .section-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+  .section-body { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+  .competitor-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 10px; transition: border-color 0.15s; }
+  .competitor-card:hover { border-color: var(--border-hover); }
+  .comp-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .comp-detail { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 3px; }
+  .score-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .score-label { font-size: 11px; color: var(--text-muted); width: 80px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+  .score-bar { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .score-val { font-size: 11px; color: var(--text-muted); width: 32px; text-align: right; font-family: 'DM Mono', monospace; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .pill { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 500; font-family: 'DM Mono', monospace; }
+  .pill-strength { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+  .pill-weakness { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .pill-opp { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .pill-threat { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+  .swot-label { font-size: 11px; color: var(--text-hint); margin-bottom: 6px; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'DM Mono', monospace; }
+  .action-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .action-item:last-child { border-bottom: none; }
+  .action-num { font-size: 12px; font-weight: 600; color: var(--accent); width: 20px; flex-shrink: 0; padding-top: 2px; font-family: 'DM Mono', monospace; }
+  @media (max-width: 540px) { .g2 { grid-template-columns: 1fr; } .report-header { flex-direction: column; gap: 10px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="brand-tag">AI Marketing Tool · by Triscia Bianca Jumawid</div>
+    <h1>Competitor & Niche Research Assistant</h1>
+    <p class="subtitle">Get a structured competitive analysis with SWOT, competitor scores & action items</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('setup')">🔍 Setup</button>
+    <button class="tab" onclick="switchTab('report')">📊 Analysis report</button>
+  </div>
+
+  <div id="panel-setup" class="panel active">
+    <div class="card">
+      <div class="card-title">Research details</div>
+      <div class="g2">
+        <div><label>Your brand name</label><input type="text" id="brand" placeholder="e.g. Ink Permanent" /></div>
+        <div><label>Your niche</label>
+          <select id="niche">
+            <option value="PMU and brow supply">PMU & brow supply</option>
+            <option value="fashion and clothing ecommerce">Fashion & clothing</option>
+            <option value="beauty and skincare">Beauty & skincare</option>
+            <option value="tattoo supply">Tattoo supply</option>
+            <option value="ecommerce general">Ecommerce general</option>
+          </select>
+        </div>
+      </div>
+      <div class="g1"><label>Competitor brands to analyze (optional)</label><input type="text" id="competitors" placeholder="e.g. Li Pigments, Perma Blend, Tina Davies..." /></div>
+      <div class="g2">
+        <div><label>Primary sales channel</label>
+          <select id="channel">
+            <option value="Shopify + Amazon">Shopify + Amazon</option>
+            <option value="Shopify only">Shopify only</option>
+            <option value="Amazon only">Amazon only</option>
+            <option value="TikTok Shop">TikTok Shop</option>
+            <option value="Instagram">Instagram</option>
+          </select>
+        </div>
+        <div><label>Target market</label>
+          <select id="market">
+            <option value="US professional PMU artists">US professional PMU artists</option>
+            <option value="US beauty consumers">US beauty consumers</option>
+            <option value="Global PMU professionals">Global PMU professionals</option>
+            <option value="Beauty students and beginners">Beauty students</option>
+          </select>
+        </div>
+      </div>
+      <div class="g1"><label>Focus area</label>
+        <select id="focus">
+          <option value="full competitive overview">Full competitive overview</option>
+          <option value="content and social media strategy gaps">Content & social media gaps</option>
+          <option value="pricing and product gaps">Pricing & product gaps</option>
+          <option value="growth opportunities outside Amazon">Growth opportunities outside Amazon</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="generateReport()">Run analysis →</button>
+    </div>
+  </div>
+
+  <div id="panel-report" class="panel">
+    <div id="report-output">
+      <div class="empty"><div class="empty-icon">📊</div>Fill in the setup tab and run your analysis.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelector('.tab[onclick="switchTab(\'' + tab + '\')"]').classList.add('active');
+}
+
+async function generateReport() {
+  const brand = document.getElementById('brand').value.trim() || 'Ink Permanent';
+  const niche = document.getElementById('niche').value;
+  const competitors = document.getElementById('competitors').value.trim();
+  const channel = document.getElementById('channel').value;
+  const market = document.getElementById('market').value;
+  const focus = document.getElementById('focus').value;
+
+  switchTab('report');
+  document.getElementById('report-output').innerHTML = '<div class="empty"><div class="empty-icon">✦</div><span class="loading">Running competitive analysis</span></div>';
+
+  const prompt = `You are a strategic marketing analyst. Create a competitive analysis for ${brand}, a ${niche} brand selling via ${channel}, targeting ${market}.
+${competitors ? 'Known competitors: ' + competitors : ''}
+Focus area: ${focus}
+
+Return ONLY valid JSON, no markdown, no backticks:
+{
+  "summary": "2-3 sentence market overview and where ${brand} stands",
+  "competitors": [
+    { "name": "name", "strength": "main strength (1 sentence)", "weakness": "main weakness (1 sentence)", "content_score": 75, "price_score": 60, "brand_score": 80 }
+  ],
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "weaknesses": ["weakness 1", "weakness 2", "weakness 3"],
+  "opportunities": ["opportunity 1", "opportunity 2", "opportunity 3"],
+  "threats": ["threat 1", "threat 2"],
+  "actions": ["action 1", "action 2", "action 3", "action 4", "action 5"]
+}
+Include 3-5 real or plausible competitors. Scores out of 100. Actions must be specific and immediately actionable.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    let raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+    const report = JSON.parse(raw);
+    renderReport(report, brand, niche);
+  } catch(e) {
+    document.getElementById('report-output').innerHTML = '<div class="empty">Something went wrong — please try again.</div>';
+  }
+}
+
+function renderReport(r, brand, niche) {
+  const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const pills = (arr, cls) => (arr||[]).map(i => `<span class="pill ${cls}">${i}</span>`).join('');
+  const compHTML = (r.competitors||[]).map(c => `
+    <div class="competitor-card">
+      <div class="comp-name">${c.name}</div>
+      <div class="comp-detail">✦ ${c.strength}</div>
+      <div class="comp-detail">✗ ${c.weakness}</div>
+      <div class="score-row"><span class="score-label">Content</span><div class="score-bar"><div class="score-fill" style="width:${Math.round(c.content_score)}%;background:var(--blue)"></div></div><span class="score-val">${Math.round(c.content_score)}%</span></div>
+      <div class="score-row"><span class="score-label">Pricing</span><div class="score-bar"><div class="score-fill" style="width:${Math.round(c.price_score)}%;background:var(--green)"></div></div><span class="score-val">${Math.round(c.price_score)}%</span></div>
+      <div class="score-row"><span class="score-label">Brand</span><div class="score-bar"><div class="score-fill" style="width:${Math.round(c.brand_score)}%;background:var(--accent)"></div></div><span class="score-val">${Math.round(c.brand_score)}%</span></div>
+    </div>`).join('');
+
+  document.getElementById('report-output').innerHTML = `
+    <div class="report-header">
+      <div><div class="report-title">Competitive analysis — ${brand}</div><div class="report-meta">${niche} · ${date}</div></div>
+      <button class="btn" onclick="copyReport()" style="font-size:12px;padding:6px 12px;">⎘ Copy report</button>
+    </div>
+    <div class="card">
+      <div class="section-block"><div class="section-head">Market summary</div><div class="section-body">${r.summary}</div></div>
+      <div class="section-block"><div class="section-head">Competitor landscape</div>${compHTML}</div>
+      <div class="section-block">
+        <div class="section-head">SWOT — ${brand}</div>
+        <div class="swot-label">Strengths</div><div class="pill-row">${pills(r.strengths,'pill-strength')}</div>
+        <div class="swot-label">Weaknesses</div><div class="pill-row">${pills(r.weaknesses,'pill-weakness')}</div>
+        <div class="swot-label">Opportunities</div><div class="pill-row">${pills(r.opportunities,'pill-opp')}</div>
+        <div class="swot-label">Threats</div><div class="pill-row">${pills(r.threats,'pill-threat')}</div>
+      </div>
+      <div class="section-block" style="margin-bottom:0;">
+        <div class="section-head">Top action items</div>
+        ${(r.actions||[]).map((a,i)=>`<div class="action-item"><span class="action-num">${i+1}</span><span>${a}</span></div>`).join('')}
+      </div>
+    </div>`;
+  window._reportData = r; window._reportBrand = brand;
+}
+
+function copyReport() {
+  const r = window._reportData;
+  if (!r) return;
+  const text = [`COMPETITIVE ANALYSIS — ${window._reportBrand}`,`\nMARKET SUMMARY\n${r.summary}`,`\nCOMPETITORS\n${(r.competitors||[]).map(c=>`${c.name}: Strong — ${c.strength} | Weak — ${c.weakness}`).join('\n')}`,`\nSTRENGTHS\n${(r.strengths||[]).map(s=>'• '+s).join('\n')}`,`\nWEAKNESSES\n${(r.weaknesses||[]).map(s=>'• '+s).join('\n')}`,`\nOPPORTUNITIES\n${(r.opportunities||[]).map(s=>'• '+s).join('\n')}`,`\nTHREATS\n${(r.threats||[]).map(s=>'• '+s).join('\n')}`,`\nACTION ITEMS\n${(r.actions||[]).map((a,i)=>`${i+1}. ${a}`).join('\n')}`].join('\n');
+  navigator.clipboard.writeText(text);
+  const btn = event.target.closest('button');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+</script>
+</body>
+</html>
